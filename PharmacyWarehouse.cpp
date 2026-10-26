@@ -1,5 +1,6 @@
 #include "PharmacyWarehouse.h"
 #include <iostream>
+#include <format> // Подключаем для std::format
 
 using namespace std;
 
@@ -10,8 +11,9 @@ string PharmacyWarehouse::getName() const { return warehouseName; }
 int PharmacyWarehouse::getCount() const { return (int)medicines.size(); }
 
 void PharmacyWarehouse::addMedicine(const Medicine& m) {
-    if ((int)medicines.size() >= MAX_CAPACITY)
-        throw MedicineError("Sklad perepolnen! Maksimum: " + to_string(MAX_CAPACITY));
+    if ((int)medicines.size() >= MAX_CAPACITY) {
+        throw MedicineError(std::format("Sklad perepolnen! Maksimum: {}", MAX_CAPACITY));
+    }
     medicines.push_back(m);
 }
 
@@ -24,13 +26,13 @@ Medicine* PharmacyWarehouse::findByName(string_view n) {
 
 bool PharmacyWarehouse::issueMedicine(string_view n, int count) {
     Medicine* m = findByName(n);
-    if (!m) throw MedicineError("Preparat ne nayden: " + string(n));
+    if (!m) throw MedicineError(std::format("Preparat ne nayden: {}", n));
     return m->issue(count);
 }
 
 void PharmacyWarehouse::receiveMedicine(string_view n, int count) {
     Medicine* m = findByName(n);
-    if (!m) throw MedicineError("Preparat ne nayden: " + string(n));
+    if (!m) throw MedicineError(std::format("Preparat ne nayden: {}", n));
     m->receive(count);
 }
 
@@ -48,8 +50,6 @@ int PharmacyWarehouse::removeExpired() {
 }
 
 void PharmacyWarehouse::printStockReport() const {
-    // Sonar: не используйте конкатенацию вручную, используйте std::format (если компилятор поддерживает) 
-    // или просто выводите по частям. Мы выводим по частям для совместимости.
     cout << "\n  SKLAD: " << warehouseName << "\n";
     cout << "  Vsego pozitsiy: " << medicines.size()
          << " / " << MAX_CAPACITY << "\n\n";
