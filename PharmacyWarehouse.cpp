@@ -1,6 +1,6 @@
 #include "PharmacyWarehouse.h"
 #include <iostream>
-#include <format> // Подключаем для std::format
+#include <string>
 
 using namespace std;
 
@@ -12,7 +12,9 @@ int PharmacyWarehouse::getCount() const { return (int)medicines.size(); }
 
 void PharmacyWarehouse::addMedicine(const Medicine& m) {
     if ((int)medicines.size() >= MAX_CAPACITY) {
-        throw MedicineError(std::format("Sklad perepolnen! Maksimum: {}", MAX_CAPACITY));
+        string msg = "Sklad perepolnen! Maksimum: ";
+        msg += to_string(MAX_CAPACITY);
+        throw MedicineError(msg);
     }
     medicines.push_back(m);
 }
@@ -26,13 +28,21 @@ Medicine* PharmacyWarehouse::findByName(string_view n) {
 
 bool PharmacyWarehouse::issueMedicine(string_view n, int count) {
     Medicine* m = findByName(n);
-    if (!m) throw MedicineError(std::format("Preparat ne nayden: {}", n));
+    if (!m) {
+        string msg = "Preparat ne nayden: ";
+        msg += n;
+        throw MedicineError(msg);
+    }
     return m->issue(count);
 }
 
 void PharmacyWarehouse::receiveMedicine(string_view n, int count) {
     Medicine* m = findByName(n);
-    if (!m) throw MedicineError(std::format("Preparat ne nayden: {}", n));
+    if (!m) {
+        string msg = "Preparat ne nayden: ";
+        msg += n;
+        throw MedicineError(msg);
+    }
     m->receive(count);
 }
 
