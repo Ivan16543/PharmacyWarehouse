@@ -1,10 +1,9 @@
 #include "PharmacyWarehouse.h"
 #include <iostream>
-#include <stdexcept>
 
 using namespace std;
 
-PharmacyWarehouse::PharmacyWarehouse(const string& name)
+PharmacyWarehouse::PharmacyWarehouse(string_view name)
     : warehouseName(name) {}
 
 string PharmacyWarehouse::getName() const { return warehouseName; }
@@ -12,25 +11,26 @@ int PharmacyWarehouse::getCount() const { return (int)medicines.size(); }
 
 void PharmacyWarehouse::addMedicine(const Medicine& m) {
     if ((int)medicines.size() >= MAX_CAPACITY)
-        throw runtime_error("Sklad perepolnen! Maksimum: " + to_string(MAX_CAPACITY));
+        throw MedicineError("Sklad perepolnen! Maksimum: " + to_string(MAX_CAPACITY));
     medicines.push_back(m);
 }
 
-Medicine* PharmacyWarehouse::findByName(const string& n) {
-    for (auto& m : medicines)
+Medicine* PharmacyWarehouse::findByName(string_view n) {
+    for (auto& m : medicines) {
         if (m.getName() == n) return &m;
+    }
     return nullptr;
 }
 
-bool PharmacyWarehouse::issueMedicine(const string& n, int count) {
+bool PharmacyWarehouse::issueMedicine(string_view n, int count) {
     Medicine* m = findByName(n);
-    if (!m) throw runtime_error("Preparat ne nayden: " + n);
+    if (!m) throw MedicineError("Preparat ne nayden: " + string(n));
     return m->issue(count);
 }
 
-void PharmacyWarehouse::receiveMedicine(const string& n, int count) {
+void PharmacyWarehouse::receiveMedicine(string_view n, int count) {
     Medicine* m = findByName(n);
-    if (!m) throw runtime_error("Preparat ne nayden: " + n);
+    if (!m) throw MedicineError("Preparat ne nayden: " + string(n));
     m->receive(count);
 }
 
@@ -48,6 +48,8 @@ int PharmacyWarehouse::removeExpired() {
 }
 
 void PharmacyWarehouse::printStockReport() const {
+    // Sonar: не используйте конкатенацию вручную, используйте std::format (если компилятор поддерживает) 
+    // или просто выводите по частям. Мы выводим по частям для совместимости.
     cout << "\n  SKLAD: " << warehouseName << "\n";
     cout << "  Vsego pozitsiy: " << medicines.size()
          << " / " << MAX_CAPACITY << "\n\n";
@@ -60,14 +62,16 @@ void PharmacyWarehouse::printStockReport() const {
 
 void PharmacyWarehouse::printExpired() const {
     bool found = false;
-    for (const auto& m : medicines)
+    for (const auto& m : medicines) {
         if (m.isExpired()) { m.printInfo(); cout << "\n"; found = true; }
+    }
     if (!found) cout << "  Prosrochennyh preparatov net.\n";
 }
 
 void PharmacyWarehouse::printAvailable() const {
     bool found = false;
-    for (const auto& m : medicines)
+    for (const auto& m : medicines) {
         if (!m.isExpired()) { m.printInfo(); cout << "\n"; found = true; }
+    }
     if (!found) cout << "  Dostupnyh k vydache preparatov net.\n";
 }

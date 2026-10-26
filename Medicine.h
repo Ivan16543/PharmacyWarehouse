@@ -1,6 +1,14 @@
 #pragma once
 
 #include <string>
+#include <string_view>
+#include <stdexcept>
+
+// Пользовательские исключения (требование SonarCloud: dedicated exception)
+class MedicineError : public std::runtime_error {
+public:
+    explicit MedicineError(const std::string& message) : std::runtime_error(message) {}
+};
 
 class Medicine {
 private:
@@ -14,8 +22,9 @@ private:
 
 public:
     Medicine();
-    Medicine(const std::string& n, const std::string& m, const std::string& s,
-             const std::string& exp, int p, const std::string& cat, double temp);
+    // Используем std::string_view для оптимизации (SonarCloud)
+    Medicine(std::string_view n, std::string_view m, std::string_view s,
+             std::string_view exp, int p, std::string_view cat, double temp);
 
     std::string getName() const;
     std::string getManufacturer() const;
@@ -25,12 +34,12 @@ public:
     std::string getCategory() const;
     double getTemperature() const;
 
-    void setName(const std::string& n);
-    void setManufacturer(const std::string& m);
-    void setSeries(const std::string& s);
-    void setCategory(const std::string& c);
+    void setName(std::string_view n);
+    void setManufacturer(std::string_view m);
+    void setSeries(std::string_view s);
+    void setCategory(std::string_view c);
     void setPacks(int p);
-    void setExpiryDate(const std::string& exp);
+    void setExpiryDate(std::string_view exp);
     void setTemperature(double t);
 
     bool isExpired() const;

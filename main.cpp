@@ -8,7 +8,6 @@
 
 using namespace std;
 
-// Ввод с проверкой
 void clearInput() {
     cin.clear();
     cin.ignore(numeric_limits<streamsize>::max(), '\n');
@@ -41,7 +40,6 @@ string readLine(const string& prompt) {
     return value;
 }
 
-// Подменю 1
 void printMedicineMenu() {
     cout << "\nMENU: PREPARAT\n";
     cout << "  1. Sozdat novyy preparat\n";
@@ -78,7 +76,7 @@ void medicineSubMenu(PharmacyWarehouse& warehouse) {
             try {
                 med = Medicine(name, manuf, serie, exp, packs, cat, temp);
                 cout << "  [OK] Preparat sozdan.\n";
-            } catch (const exception& e) {
+            } catch (const MedicineError& e) { // Ловим НАШЕ конкретное исключение
                 cout << "  OSHIBKA: " << e.what() << "\n";
             }
             break;
@@ -94,19 +92,19 @@ void medicineSubMenu(PharmacyWarehouse& warehouse) {
         case 7: {
             int p = readInt("Novoe kolichestvo upakovok: ");
             try { med.setPacks(p); cout << "  [OK]\n"; }
-            catch (const exception& e) { cout << "  OSHIBKA: " << e.what() << "\n"; }
+            catch (const MedicineError& e) { cout << "  OSHIBKA: " << e.what() << "\n"; }
             break;
         }
         case 8: {
             double t = readDouble("Novaya temperatura (C): ");
             try { med.setTemperature(t); cout << "  [OK]\n"; }
-            catch (const exception& e) { cout << "  OSHIBKA: " << e.what() << "\n"; }
+            catch (const MedicineError& e) { cout << "  OSHIBKA: " << e.what() << "\n"; }
             break;
         }
         case 9: {
             string exp = readLine("Novyy srok godnosti (DD.MM.GGGG): ");
             try { med.setExpiryDate(exp); cout << "  [OK]\n"; }
-            catch (const exception& e) { cout << "  OSHIBKA: " << e.what() << "\n"; }
+            catch (const MedicineError& e) { cout << "  OSHIBKA: " << e.what() << "\n"; }
             break;
         }
         case 10:
@@ -116,7 +114,7 @@ void medicineSubMenu(PharmacyWarehouse& warehouse) {
             try {
                 warehouse.addMedicine(med);
                 cout << "  Preparat otpravlen na sklad: " << warehouse.getName() << "\n";
-            } catch (const exception& e) {
+            } catch (const MedicineError& e) {
                 cout << "  OSHIBKA: " << e.what() << "\n";
             }
             break;
@@ -127,7 +125,6 @@ void medicineSubMenu(PharmacyWarehouse& warehouse) {
     } while (choice != 0);
 }
 
-// Подменю 2
 void printWarehouseMenu() {
     cout << "\nMENU: SKLAD\n";
     cout << "  1. Pokazat vse preparaty\n";
@@ -153,9 +150,13 @@ void warehouseSubMenu(PharmacyWarehouse& warehouse) {
         case 2: {
             cout << "\n--- Poisk ---\n";
             string name = readLine("Nazvanie: ");
-            Medicine* m = warehouse.findByName(name);
-            if (m) m->printInfo();
-            else   cout << "  Preparat ne nayden.\n";
+            
+            // Sonar: используем const Medicine* и init-statement
+            if (const Medicine* m = warehouse.findByName(name)) { 
+                m->printInfo();
+            } else {
+                cout << "  Preparat ne nayden.\n";
+            }
             break;
         }
         case 3: {
@@ -164,8 +165,11 @@ void warehouseSubMenu(PharmacyWarehouse& warehouse) {
             int    cnt  = readInt("Kolichestvo dlya prihoda: ");
             try {
                 warehouse.receiveMedicine(name, cnt);
-                cout << "  [OK] Ostatok: " << warehouse.findByName(name)->getPacks() << "\n";
-            } catch (const exception& e) { cout << "  OSHIBKA: " << e.what() << "\n"; }
+                // Sonar: используем const Medicine*
+                if (const Medicine* m = warehouse.findByName(name)) {
+                    cout << "  [OK] Ostatok: " << m->getPacks() << "\n";
+                }
+            } catch (const MedicineError& e) { cout << "  OSHIBKA: " << e.what() << "\n"; }
             break;
         }
         case 4: {
@@ -174,8 +178,11 @@ void warehouseSubMenu(PharmacyWarehouse& warehouse) {
             int    cnt  = readInt("Kolichestvo k vydache: ");
             try {
                 warehouse.issueMedicine(name, cnt);
-                cout << "  [OK] Ostatok: " << warehouse.findByName(name)->getPacks() << "\n";
-            } catch (const exception& e) { cout << "  OSHIBKA: " << e.what() << "\n"; }
+                // Sonar: используем const Medicine*
+                if (const Medicine* m = warehouse.findByName(name)) {
+                    cout << "  [OK] Ostatok: " << m->getPacks() << "\n";
+                }
+            } catch (const MedicineError& e) { cout << "  OSHIBKA: " << e.what() << "\n"; }
             break;
         }
         case 5: {
@@ -192,7 +199,6 @@ void warehouseSubMenu(PharmacyWarehouse& warehouse) {
     } while (choice != 0);
 }
 
-// Главное меню
 void printMainMenu() {
     cout << "\nMENU\n";
     cout << "  1. Preparat\n";
@@ -201,10 +207,7 @@ void printMainMenu() {
 }
 
 int main() {
-    // Кодировку настраивать больше не нужно!
-    
     PharmacyWarehouse warehouse("Glavnyy aptechnyy sklad N1");
-
     int choice = -1;
     do {
         printMainMenu();

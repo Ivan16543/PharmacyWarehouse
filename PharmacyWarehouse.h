@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include <string_view>
 #include <vector>
 #include "Medicine.h"
 
@@ -11,19 +12,20 @@ private:
     static const int MAX_CAPACITY = 100;
 
 public:
-    explicit PharmacyWarehouse(const std::string& name);
+    // Sonar требует string_view
+    explicit PharmacyWarehouse(std::string_view name);
 
     std::string getName() const;
     int getCount() const;
 
     void addMedicine(const Medicine& m);
-    Medicine* findByName(const std::string& n);
+    Medicine* findByName(std::string_view n);
 
-    bool issueMedicine(const std::string& n, int count);
-    void receiveMedicine(const std::string& n, int count);
+    bool issueMedicine(std::string_view n, int count);
+    void receiveMedicine(std::string_view n, int count);
     int removeExpired();
 
     void printStockReport() const;
     void printExpired() const;
     void printAvailable() const;
-}; 
+};
