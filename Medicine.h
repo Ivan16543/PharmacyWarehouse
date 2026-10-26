@@ -4,10 +4,10 @@
 #include <string_view>
 #include <stdexcept>
 
-// Пользовательские исключения (требование SonarCloud: dedicated exception)
+// Наследуем конструкторы от std::runtime_error (требование SonarCloud)
 class MedicineError : public std::runtime_error {
 public:
-    explicit MedicineError(const std::string& message) : std::runtime_error(message) {}
+    using std::runtime_error::runtime_error; 
 };
 
 class Medicine {
@@ -22,7 +22,6 @@ private:
 
 public:
     Medicine();
-    // Используем std::string_view для оптимизации (SonarCloud)
     Medicine(std::string_view n, std::string_view m, std::string_view s,
              std::string_view exp, int p, std::string_view cat, double temp);
 

@@ -7,15 +7,12 @@
 
 using namespace std;
 
-// Вспомогательные функции для работы с датами
 static string currentDate() {
-    // Требование Sonar: использовать std::chrono
     auto now = chrono::system_clock::now();
     time_t t = chrono::system_clock::to_time_t(now);
     struct tm tm_buf;
-    localtime_s(&tm_buf, &t); // Безопасная функция для Windows
+    localtime_s(&tm_buf, &t);
 
-    // Требование Sonar: использовать std::ostringstream вместо snprintf
     ostringstream oss;
     oss << put_time(&tm_buf, "%d.%m.%Y");
     return oss.str();
