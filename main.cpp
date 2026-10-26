@@ -76,7 +76,7 @@ void medicineSubMenu(PharmacyWarehouse& warehouse) {
             try {
                 med = Medicine(name, manuf, serie, exp, packs, cat, temp);
                 cout << "  [OK] Preparat sozdan.\n";
-            } catch (const MedicineError& e) { // Ловим НАШЕ конкретное исключение
+            } catch (const MedicineError& e) { 
                 cout << "  OSHIBKA: " << e.what() << "\n";
             }
             break;
@@ -151,7 +151,6 @@ void warehouseSubMenu(PharmacyWarehouse& warehouse) {
             cout << "\n--- Poisk ---\n";
             string name = readLine("Nazvanie: ");
             
-            // Sonar: используем const Medicine* и init-statement
             if (const Medicine* m = warehouse.findByName(name)) { 
                 m->printInfo();
             } else {
@@ -165,7 +164,6 @@ void warehouseSubMenu(PharmacyWarehouse& warehouse) {
             int    cnt  = readInt("Kolichestvo dlya prihoda: ");
             try {
                 warehouse.receiveMedicine(name, cnt);
-                // Sonar: используем const Medicine*
                 if (const Medicine* m = warehouse.findByName(name)) {
                     cout << "  [OK] Ostatok: " << m->getPacks() << "\n";
                 }
@@ -178,7 +176,6 @@ void warehouseSubMenu(PharmacyWarehouse& warehouse) {
             int    cnt  = readInt("Kolichestvo k vydache: ");
             try {
                 warehouse.issueMedicine(name, cnt);
-                // Sonar: используем const Medicine*
                 if (const Medicine* m = warehouse.findByName(name)) {
                     cout << "  [OK] Ostatok: " << m->getPacks() << "\n";
                 }
