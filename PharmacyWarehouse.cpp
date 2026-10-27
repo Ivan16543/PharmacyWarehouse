@@ -48,14 +48,19 @@ void PharmacyWarehouse::receiveMedicine(string_view n, int count) {
 
 int PharmacyWarehouse::removeExpired() {
     int removed = 0;
-    for (auto it = medicines.begin(); it != medicines.end(); ) {
-        if (it->isExpired()) {
-            cout << "  [UTILIZATSIYA] " << it->getName()
-                 << " (seriya " << it->getSeries() << ")\n";
-            it = medicines.erase(it);
+    vector<Medicine> validMedicines; 
+
+    for (int i = 0; i < (int)medicines.size(); ++i) {
+        if (medicines[i].isExpired()) {
+            cout << "  [UTILIZATSIYA] " << medicines[i].getName()
+                 << " (seriya " << medicines[i].getSeries() << ")\n";
             ++removed;
-        } else ++it;
+        } else {
+            validMedicines.push_back(medicines[i]); 
+        }
     }
+
+    medicines = validMedicines; 
     return removed;
 }
 
