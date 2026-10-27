@@ -50,13 +50,13 @@ int PharmacyWarehouse::removeExpired() {
     int removed = 0;
     vector<Medicine> validMedicines; 
 
-    for (int i = 0; i < (int)medicines.size(); ++i) {
-        if (medicines[i].isExpired()) {
-            cout << "  [UTILIZATSIYA] " << medicines[i].getName()
-                 << " (seriya " << medicines[i].getSeries() << ")\n";
+    for (const auto& med : medicines) {
+        if (med.isExpired()) {
+            cout << "  [UTILIZATSIYA] " << med.getName()
+                 << " (seriya " << med.getSeries() << ")\n";
             ++removed;
         } else {
-            validMedicines.push_back(medicines[i]); 
+            validMedicines.push_back(med); 
         }
     }
 
