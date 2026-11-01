@@ -51,9 +51,12 @@
 ```bash
 g++ -std=c++17 -Wall -Wextra main.cpp Medicine.cpp PharmacyWarehouse.cpp -o pharmacy
 
-```markdown
-## Автор
+Запуск
+bash
+./pharmacy
+👤 Автор
+Студент: Семеняго Иван
 
-* Студент: **Семеняго Иван**
-* Группа: **550501**
-* Вариант: **25. Аптечный склад**
+Группа: 550501
+
+Вариант: 25. Аптечный склад
