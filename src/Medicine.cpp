@@ -1,4 +1,4 @@
-#include "Medicine.h"
+#include "../include/Medicine.h"
 #include <iostream>
 #include <chrono>
 #include <ctime>

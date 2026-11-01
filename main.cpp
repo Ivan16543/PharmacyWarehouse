@@ -3,8 +3,8 @@
 #include <limits>
 #include <stdexcept>
 
-#include "Medicine.h"
-#include "PharmacyWarehouse.h"
+#include "include/Medicine.h"
+#include "include/PharmacyWarehouse.h"
 
 using namespace std;
 
