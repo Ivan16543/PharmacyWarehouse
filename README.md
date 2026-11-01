@@ -49,9 +49,10 @@
 
 ```bash
 g++ -std=c++17 -Wall -Wextra main.cpp Medicine.cpp PharmacyWarehouse.cpp -o pharmacy
-## Сборка
+```
+### Запуск
+
 ```bash
-g++ -std=c++17 -Wall -Wextra -o pharmacy main.cpp
 ./pharmacy
 ```
 
