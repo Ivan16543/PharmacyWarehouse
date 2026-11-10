@@ -2,7 +2,6 @@
 #include <string>
 #include <limits>
 #include <stdexcept>
-#include <vector> 
 
 #include "include/Medicine.h"
 #include "include/PharmacyWarehouse.h"
@@ -53,14 +52,12 @@ void printMedicineMenu() {
     cout << "  8. Izmenit temperaturu hraneniya\n";
     cout << "  9. Izmenit srok godnosti\n";
     cout << " 10. Proverit, prosrochen li\n";
-    cout << " 11. Dobavit preparat v korzinu\n";
-    cout << " 12. Otpravit VSE iz korziny na sklad\n";
+    cout << " 11. Otpravit preparat na sklad\n";
     cout << "  0. Nazad\n";
 }
 
 void medicineSubMenu(PharmacyWarehouse& warehouse) {
     Medicine med;
-    vector<Medicine> cart; // Корзина для сбора препаратов
     int choice = -1;
     
     do {
@@ -115,31 +112,12 @@ void medicineSubMenu(PharmacyWarehouse& warehouse) {
             cout << "  Preparat " << (med.isExpired() ? "PROSROCHEN" : "gotov") << "\n";
             break;
         case 11: {
-            // Проверяем, создан ли препарат вообще
-            if (med.getName() == "Neizvestno" || med.getName().empty()) {
-                cout << "  OSHIBKA: Snachala sozdayte preparat (punkt 1)!\n";
-            } else {
-                cart.push_back(med);
-                cout << "  [OK] Preparat dobavlen v korzinu. Vsego v korzine: " << cart.size() << "\n";
+            try {
+                warehouse.addMedicine(med);
+                cout << "  Preparat otpravlen na sklad: " << warehouse.getName() << "\n";
+            } catch (const MedicineError& e) {
+                cout << "  OSHIBKA: " << e.what() << "\n";
             }
-            break;
-        }
-        case 12: {
-            if (cart.empty()) {
-                cout << "  Korzina pusta! Snachala dobavte preparaty (punkt 11).\n";
-                break;
-            }
-            int successCount = 0;
-            for (const auto& item : cart) {
-                try {
-                    warehouse.addMedicine(item);
-                    successCount++;
-                } catch (const MedicineError& e) {
-                    cout << "  OSHIBKA pri dobavlenii " << item.getName() << ": " << e.what() << "\n";
-                }
-            }
-            cart.clear(); // Очищаем корзину после отправки
-            cout << "  [OK] Uspeshno otpravleno na sklad: " << successCount << " sht.\n";
             break;
         }
         case 0: cout << "  Vozvrat v menu.\n"; break;
