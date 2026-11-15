@@ -18,7 +18,7 @@ int readInt(const string& prompt) {
     while (true) {
         cout << prompt;
         if (cin >> value) { clearInput(); return value; }
-        cout << " Error: enter an integer number.\n";
+        cout << "  [!] Error: enter an integer number.\n";
         clearInput();
     }
 }
@@ -28,7 +28,7 @@ double readDouble(const string& prompt) {
     while (true) {
         cout << prompt;
         if (cin >> value) { clearInput(); return value; }
-        cout << " Error: enter a number.\n";
+        cout << "  [!] Error: enter a number.\n";
         clearInput();
     }
 }
@@ -75,14 +75,14 @@ void medicineSubMenu(PharmacyWarehouse& warehouse) {
             double temp  = readDouble("Temperature (C): ");
             try {
                 med = Medicine(name, manuf, serie, exp, packs, cat, temp);
-                cout << " Medicine created.\n";
+                cout << "  [OK] Medicine created.\n";
             } catch (const MedicineError& e) { 
                 cout << "  ERROR: " << e.what() << "\n";
             }
             break;
         }
         case 2:
-            cout << "\nCurrent medicine\n";
+            cout << "\n--- Current medicine ---\n";
             med.printInfo();
             break;
         case 3: med.setName(readLine("New name: "));    cout << "  [OK]\n"; break;
@@ -134,13 +134,14 @@ void printWarehouseMenu() {
     cout << "  5. Dispose expired medicines\n";
     cout << "  6. Show only expired\n";
     cout << "  7. Show only available for issue\n";
-    cout << "  8. Operator demonstration\n"; 
+    cout << "  8. Operator demonstration (Lab 2)\n";
     cout << "  0. Back\n";
 }
 
 void demonstrateOperators(PharmacyWarehouse& warehouse) {
     cout << "\nOperator Demonstration\n";
-    Medicine m1, m2;
+    Medicine m1;
+    Medicine m2;
     
     cout << "Enter first medicine:\n";
     cin >> m1;
@@ -158,8 +159,8 @@ void demonstrateOperators(PharmacyWarehouse& warehouse) {
     else cout << "Medicines are DIFFERENT.\n";
 
     cout << "Comparison operator< (by packs): ";
-    if (m1 < m2) cout << "First medicine has FEWER packs.\n";
-    else if (m1 > m2) cout << "First medicine has MORE packs.\n";
+    if (m1 < m2) cout << "First medicine has FEWER packs.\n"; 
+    else if (m1 > m2) cout << "First medicine has MORE packs.\n"; 
     else cout << "Same number of packs.\n";
 
     cout << "Friend function hasSpecialStorage: ";
@@ -200,7 +201,7 @@ void warehouseSubMenu(PharmacyWarehouse& warehouse) {
             try {
                 warehouse.receiveMedicine(name, cnt);
                 if (const Medicine* m = warehouse.findByName(name)) {
-                    cout << "Remaining: " << m->getPacks() << "\n";
+                    cout << " Remaining: " << m->getPacks() << "\n";
                 }
             } catch (const MedicineError& e) { cout << "  ERROR: " << e.what() << "\n"; }
             break;
@@ -212,7 +213,7 @@ void warehouseSubMenu(PharmacyWarehouse& warehouse) {
             try {
                 warehouse.issueMedicine(name, cnt);
                 if (const Medicine* m = warehouse.findByName(name)) {
-                    cout << "Remaining: " << m->getPacks() << "\n";
+                    cout << " Remaining: " << m->getPacks() << "\n";
                 }
             } catch (const MedicineError& e) { cout << "  ERROR: " << e.what() << "\n"; }
             break;
@@ -227,7 +228,7 @@ void warehouseSubMenu(PharmacyWarehouse& warehouse) {
         case 7: warehouse.printAvailable(); break;
         case 8: demonstrateOperators(warehouse); break;
         case 0: cout << "  Returning to menu.\n"; break;
-        default: cout << "Invalid choice.\n"; break;
+        default: cout << " Invalid choice.\n"; break;
         }
     } while (choice != 0);
 }
@@ -250,7 +251,7 @@ int main() {
         case 1: medicineSubMenu(warehouse);   break;
         case 2: warehouseSubMenu(warehouse);  break;
         case 0: cout << "\nExit. Goodbye!\n"; break;
-        default: cout << "Invalid choice.\n"; break;
+        default: cout << " Invalid choice.\n"; break;
         }
     } while (choice != 0);
 

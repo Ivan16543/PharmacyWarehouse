@@ -110,33 +110,10 @@ bool Medicine::operator==(const Medicine& other) const {
     return series == other.series;
 }
 
-bool Medicine::operator<(const Medicine& other) const {
+bool Medicine::operator<(const Medicine& other) const { 
     return packs < other.packs;
 }
 
-bool Medicine::operator>(const Medicine& other) const {
+bool Medicine::operator>(const Medicine& other) const { 
     return packs > other.packs;
-}
-
-ostream& operator<<(ostream& os, const Medicine& med) {
-    os << "Medicine: " << med.name << " (" << med.category << ")\n"
-       << " Series: " << med.series << "\n"
-       << " Expiry: " << med.expiryDate << "\n"
-       << " Packs: " << med.packs;
-    return os;
-}
-
-istream& operator>>(istream& is, Medicine& med) {
-    cout << "Name: "; getline(is >> ws, med.name);
-    cout << "Manufacturer: "; getline(is >> ws, med.manufacturer);
-    cout << "Series: "; getline(is >> ws, med.series);
-    cout << "Expiry Date (DD.MM.YYYY): "; getline(is >> ws, med.expiryDate);
-    cout << "Number of packs: "; is >> med.packs;
-    cout << "Category: "; getline(is >> ws, med.category);
-    cout << "Storage temperature (C): "; is >> med.temperature;
-    return is;
-}
-
-bool hasSpecialStorage(const Medicine& med) {
-    return med.temperature < 10.0;
 }

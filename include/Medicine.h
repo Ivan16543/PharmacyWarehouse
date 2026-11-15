@@ -3,7 +3,7 @@
 #include <string>
 #include <string_view>
 #include <stdexcept>
-#include <iostream> // [ЛАБА 2] Для перегрузки ввода/вывода
+#include <iostream>
 
 class MedicineError : public std::runtime_error {
 public:
@@ -47,10 +47,30 @@ public:
     void printInfo() const;
 
     bool operator==(const Medicine& other) const; 
+
     bool operator<(const Medicine& other) const;  
     bool operator>(const Medicine& other) const;  
 
-    friend std::ostream& operator<<(std::ostream& os, const Medicine& med);
-    friend std::istream& operator>>(std::istream& is, Medicine& med);
-    friend bool hasSpecialStorage(const Medicine& med);
+    friend std::ostream& operator<<(std::ostream& os, const Medicine& med) {
+        os << "Medicine: " << med.name << " (" << med.category << ")\n"
+           << " Series: " << med.series << "\n"
+           << " Expiry: " << med.expiryDate << "\n"
+           << " Packs: " << med.packs;
+        return os;
+    }
+
+    friend std::istream& operator>>(std::istream& is, Medicine& med) {
+        std::cout << "Name: "; std::getline(is >> std::ws, med.name);
+        std::cout << "Manufacturer: "; std::getline(is >> std::ws, med.manufacturer);
+        std::cout << "Series: "; std::getline(is >> std::ws, med.series);
+        std::cout << "Expiry Date (DD.MM.YYYY): "; std::getline(is >> std::ws, med.expiryDate);
+        std::cout << "Number of packs: "; is >> med.packs;
+        std::cout << "Category: "; std::getline(is >> std::ws, med.category);
+        std::cout << "Storage temperature (C): "; is >> med.temperature;
+        return is;
+    }
+
+    friend bool hasSpecialStorage(const Medicine& med) {
+        return med.temperature < 10.0;
+    }
 };
