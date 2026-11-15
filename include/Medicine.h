@@ -3,8 +3,8 @@
 #include <string>
 #include <string_view>
 #include <stdexcept>
+#include <iostream> // [ЛАБА 2] Для перегрузки ввода/вывода
 
-// Наследуем конструкторы от std::runtime_error (требование SonarCloud)
 class MedicineError : public std::runtime_error {
 public:
     using std::runtime_error::runtime_error; 
@@ -45,4 +45,12 @@ public:
     bool issue(int count);
     void receive(int count);
     void printInfo() const;
+
+    bool operator==(const Medicine& other) const; 
+    bool operator<(const Medicine& other) const;  
+    bool operator>(const Medicine& other) const;  
+
+    friend std::ostream& operator<<(std::ostream& os, const Medicine& med);
+    friend std::istream& operator>>(std::istream& is, Medicine& med);
+    friend bool hasSpecialStorage(const Medicine& med);
 };

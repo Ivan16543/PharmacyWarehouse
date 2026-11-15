@@ -10,7 +10,7 @@ using namespace std;
 
 void clearInput() {
     cin.clear();
-    cin.ignore(10000, '\n');
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');
 }
 
 int readInt(const string& prompt) {
@@ -18,7 +18,7 @@ int readInt(const string& prompt) {
     while (true) {
         cout << prompt;
         if (cin >> value) { clearInput(); return value; }
-        cout << "  [!] Oshibka: vvedite tseloe chislo.\n";
+        cout << " Error: enter an integer number.\n";
         clearInput();
     }
 }
@@ -28,7 +28,7 @@ double readDouble(const string& prompt) {
     while (true) {
         cout << prompt;
         if (cin >> value) { clearInput(); return value; }
-        cout << "  [!] Oshibka: vvedite chislo.\n";
+        cout << " Error: enter a number.\n";
         clearInput();
     }
 }
@@ -41,180 +41,216 @@ string readLine(const string& prompt) {
 }
 
 void printMedicineMenu() {
-    cout << "\nMENU: PREPARAT\n";
-    cout << "  1. Sozdat novyy preparat\n";
-    cout << "  2. Pokazat tekushchiy preparat\n";
-    cout << "  3. Izmenit nazvanie\n";
-    cout << "  4. Izmenit proizvoditelya\n";
-    cout << "  5. Izmenit seriyu\n";
-    cout << "  6. Izmenit kategoriyu\n";
-    cout << "  7. Izmenit kol-vo upakovok\n";
-    cout << "  8. Izmenit temperaturu hraneniya\n";
-    cout << "  9. Izmenit srok godnosti\n";
-    cout << " 10. Proverit, prosrochen li\n";
-    cout << " 11. Otpravit preparat na sklad\n";
-    cout << "  0. Nazad\n";
+    cout << "\nMENU: MEDICINE\n";
+    cout << "  1. Create new medicine\n";
+    cout << "  2. Show current medicine\n";
+    cout << "  3. Change name\n";
+    cout << "  4. Change manufacturer\n";
+    cout << "  5. Change series\n";
+    cout << "  6. Change category\n";
+    cout << "  7. Change number of packs\n";
+    cout << "  8. Change storage temperature\n";
+    cout << "  9. Change expiry date\n";
+    cout << " 10. Check if expired\n";
+    cout << " 11. Send medicine to warehouse\n";
+    cout << "  0. Back\n";
 }
 
 void medicineSubMenu(PharmacyWarehouse& warehouse) {
     Medicine med;
     int choice = -1;
-    
     do {
         printMedicineMenu();
-        choice = readInt("Vash vybor: ");
+        choice = readInt("Your choice: ");
 
         switch (choice) {
         case 1: {
-            cout << "\n--- Sozdanie preparata ---\n";
-            string name  = readLine("Nazvanie: ");
-            string manuf = readLine("Proizvoditel: ");
-            string serie = readLine("Seriya: ");
-            string exp   = readLine("Srok godnosti (DD.MM.GGGG): ");
-            int    packs = readInt("Kolichestvo upakovok: ");
-            string cat   = readLine("Kategoriya: ");
-            double temp  = readDouble("Temperatura (C): ");
+            cout << "\n--- Create medicine ---\n";
+            string name  = readLine("Name: ");
+            string manuf = readLine("Manufacturer: ");
+            string serie = readLine("Series: ");
+            string exp   = readLine("Expiry date (DD.MM.YYYY): ");
+            int    packs = readInt("Number of packs: ");
+            string cat   = readLine("Category: ");
+            double temp  = readDouble("Temperature (C): ");
             try {
                 med = Medicine(name, manuf, serie, exp, packs, cat, temp);
-                cout << "  [OK] Preparat sozdan.\n";
+                cout << " Medicine created.\n";
             } catch (const MedicineError& e) { 
-                cout << "  OSHIBKA: " << e.what() << "\n";
+                cout << "  ERROR: " << e.what() << "\n";
             }
             break;
         }
         case 2:
-            cout << "\n--- Tekushchiy preparat ---\n";
+            cout << "\nCurrent medicine\n";
             med.printInfo();
             break;
-        case 3: med.setName(readLine("Novoe nazvanie: "));    cout << "  [OK]\n"; break;
-        case 4: med.setManufacturer(readLine("Novyy proizvoditel: ")); cout << "  [OK]\n"; break;
-        case 5: med.setSeries(readLine("Novaya seriya: "));      cout << "  [OK]\n"; break;
-        case 6: med.setCategory(readLine("Novaya kategoriya: "));cout << "  [OK]\n"; break;
+        case 3: med.setName(readLine("New name: "));    cout << "  [OK]\n"; break;
+        case 4: med.setManufacturer(readLine("New manufacturer: ")); cout << "  [OK]\n"; break;
+        case 5: med.setSeries(readLine("New series: "));      cout << "  [OK]\n"; break;
+        case 6: med.setCategory(readLine("New category: "));cout << "  [OK]\n"; break;
         case 7: {
-            int p = readInt("Novoe kolichestvo upakovok: ");
+            int p = readInt("New number of packs: ");
             try { med.setPacks(p); cout << "  [OK]\n"; }
-            catch (const MedicineError& e) { cout << "  OSHIBKA: " << e.what() << "\n"; }
+            catch (const MedicineError& e) { cout << "  ERROR: " << e.what() << "\n"; }
             break;
         }
         case 8: {
-            double t = readDouble("Novaya temperatura (C): ");
+            double t = readDouble("New temperature (C): ");
             try { med.setTemperature(t); cout << "  [OK]\n"; }
-            catch (const MedicineError& e) { cout << "  OSHIBKA: " << e.what() << "\n"; }
+            catch (const MedicineError& e) { cout << "  ERROR: " << e.what() << "\n"; }
             break;
         }
         case 9: {
-            string exp = readLine("Novyy srok godnosti (DD.MM.GGGG): ");
+            string exp = readLine("New expiry date (DD.MM.YYYY): ");
             try { med.setExpiryDate(exp); cout << "  [OK]\n"; }
-            catch (const MedicineError& e) { cout << "  OSHIBKA: " << e.what() << "\n"; }
+            catch (const MedicineError& e) { cout << "  ERROR: " << e.what() << "\n"; }
             break;
         }
         case 10:
-            cout << "  Preparat " << (med.isExpired() ? "PROSROCHEN" : "gotov") << "\n";
+            cout << "  Medicine is " << (med.isExpired() ? "EXPIRED" : "VALID") << "\n";
             break;
         case 11: {
             try {
                 warehouse.addMedicine(med);
-                cout << "  Preparat otpravlen na sklad: " << warehouse.getName() << "\n";
+                cout << "  Medicine sent to warehouse: " << warehouse.getName() << "\n";
             } catch (const MedicineError& e) {
-                cout << "  OSHIBKA: " << e.what() << "\n";
+                cout << "  ERROR: " << e.what() << "\n";
             }
             break;
         }
-        case 0: cout << "  Vozvrat v menu.\n"; break;
-        default: cout << "  [!] Nevernyy punkt.\n"; break;
+        case 0: cout << "  Returning to menu.\n"; break;
+        default: cout << " Invalid choice.\n"; break;
         }
     } while (choice != 0);
 }
 
 void printWarehouseMenu() {
-    cout << "\nMENU: SKLAD\n";
-    cout << "  1. Pokazat vse preparaty\n";
-    cout << "  2. Nayti preparat po nazvaniyu\n";
-    cout << "  3. Postavka preparata\n";
-    cout << "  4. Vydacha preparata\n";
-    cout << "  5. Utilizirovat prosrochennye partii\n";
-    cout << "  6. Pokazat tolko prosrochennye\n";
-    cout << "  7. Pokazat tolko dostupnye k vydache\n";
-    cout << "  0. Nazad\n";
+    cout << "\nMENU: WAREHOUSE\n";
+    cout << "  1. Show all medicines\n";
+    cout << "  2. Find medicine by name\n";
+    cout << "  3. Receive medicine\n";
+    cout << "  4. Issue medicine\n";
+    cout << "  5. Dispose expired medicines\n";
+    cout << "  6. Show only expired\n";
+    cout << "  7. Show only available for issue\n";
+    cout << "  8. Operator demonstration\n"; 
+    cout << "  0. Back\n";
+}
+
+void demonstrateOperators(PharmacyWarehouse& warehouse) {
+    cout << "\nOperator Demonstration\n";
+    Medicine m1, m2;
+    
+    cout << "Enter first medicine:\n";
+    cin >> m1;
+    clearInput(); 
+
+    cout << "\nEnter second medicine:\n";
+    cin >> m2;
+    clearInput();
+
+    cout << "\nOutput via operator<<:\n";
+    cout << m1 << "\n\n" << m2 << "\n\n";
+
+    cout << "Comparison operator== (by series): ";
+    if (m1 == m2) cout << "Medicines are IDENTICAL.\n";
+    else cout << "Medicines are DIFFERENT.\n";
+
+    cout << "Comparison operator< (by packs): ";
+    if (m1 < m2) cout << "First medicine has FEWER packs.\n";
+    else if (m1 > m2) cout << "First medicine has MORE packs.\n";
+    else cout << "Same number of packs.\n";
+
+    cout << "Friend function hasSpecialStorage: ";
+    if (hasSpecialStorage(m1)) cout << "First medicine needs REFRIGERATION.\n";
+    else cout << "First medicine stored at ROOM TEMP.\n";
+
+    cout << "\nAdding via operator+= ...\n";
+    warehouse += m1; 
+    
+    cout << "Removing via operator-= ...\n";
+    warehouse -= m1; 
+    cout << "Trying to remove second (not in warehouse):\n";
+    warehouse -= m2; 
 }
 
 void warehouseSubMenu(PharmacyWarehouse& warehouse) {
     int choice = -1;
     do {
         printWarehouseMenu();
-        choice = readInt("Vash vybor: ");
+        choice = readInt("Your choice: ");
 
         switch (choice) {
-        case 1:
-            warehouse.printStockReport();
-            break;
+        case 1: warehouse.printStockReport(); break;
         case 2: {
-            cout << "\n--- Poisk ---\n";
-            string name = readLine("Nazvanie: ");
+            cout << "\nSearch\n";
+            string name = readLine("Name: ");
             if (const Medicine* m = warehouse.findByName(name)) { 
                 m->printInfo();
             } else {
-                cout << "  Preparat ne nayden.\n";
+                cout << "  Medicine not found.\n";
             }
             break;
         }
         case 3: {
-            cout << "\n--- Prihod ---\n";
-            string name = readLine("Nazvanie: ");
-            int    cnt  = readInt("Kolichestvo dlya prihoda: ");
+            cout << "\nReceive\n";
+            string name = readLine("Name: ");
+            int    cnt  = readInt("Count to receive: ");
             try {
                 warehouse.receiveMedicine(name, cnt);
                 if (const Medicine* m = warehouse.findByName(name)) {
-                    cout << "  [OK] Ostatok: " << m->getPacks() << "\n";
+                    cout << "Remaining: " << m->getPacks() << "\n";
                 }
-            } catch (const MedicineError& e) { cout << "  OSHIBKA: " << e.what() << "\n"; }
+            } catch (const MedicineError& e) { cout << "  ERROR: " << e.what() << "\n"; }
             break;
         }
         case 4: {
-            cout << "\n--- Vydacha ---\n";
-            string name = readLine("Nazvanie: ");
-            int    cnt  = readInt("Kolichestvo k vydache: ");
+            cout << "\nIssue\n";
+            string name = readLine("Name: ");
+            int    cnt  = readInt("Count to issue: ");
             try {
                 warehouse.issueMedicine(name, cnt);
                 if (const Medicine* m = warehouse.findByName(name)) {
-                    cout << "  [OK] Ostatok: " << m->getPacks() << "\n";
+                    cout << "Remaining: " << m->getPacks() << "\n";
                 }
-            } catch (const MedicineError& e) { cout << "  OSHIBKA: " << e.what() << "\n"; }
+            } catch (const MedicineError& e) { cout << "  ERROR: " << e.what() << "\n"; }
             break;
         }
         case 5: {
-            cout << "\n--- Utilizatsiya prosrochennyh ---\n";
+            cout << "\nDispose expired\n";
             int removed = warehouse.removeExpired();
-            cout << "  Utilizirovano pozitsiy: " << removed << "\n";
+            cout << "  Items disposed: " << removed << "\n";
             break;
         }
         case 6: warehouse.printExpired();   break;
         case 7: warehouse.printAvailable(); break;
-        case 0: cout << "  Vozvrat v menu.\n"; break;
-        default: cout << "  [!] Nevernyy punkt.\n"; break;
+        case 8: demonstrateOperators(warehouse); break;
+        case 0: cout << "  Returning to menu.\n"; break;
+        default: cout << "Invalid choice.\n"; break;
         }
     } while (choice != 0);
 }
 
 void printMainMenu() {
-    cout << "\nMENU\n";
-    cout << "  1. Preparat\n";
-    cout << "  2. Sklad\n";
-    cout << "  0. Vyhod\n";
+    cout << "\nMAIN MENU\n";
+    cout << "  1. Medicine\n";
+    cout << "  2. Warehouse\n";
+    cout << "  0. Exit\n";
 }
 
 int main() {
-    PharmacyWarehouse warehouse("Glavnyy aptechnyy sklad N1");
+    PharmacyWarehouse warehouse("Main Pharmacy Warehouse N1");
     int choice = -1;
     do {
         printMainMenu();
-        choice = readInt("Vash vybor: ");
+        choice = readInt("Your choice: ");
 
         switch (choice) {
         case 1: medicineSubMenu(warehouse);   break;
         case 2: warehouseSubMenu(warehouse);  break;
-        case 0: cout << "\nVyhod. Do svidaniya!\n"; break;
-        default: cout << "  [!] Nevernyy punkt.\n"; break;
+        case 0: cout << "\nExit. Goodbye!\n"; break;
+        default: cout << "Invalid choice.\n"; break;
         }
     } while (choice != 0);
 

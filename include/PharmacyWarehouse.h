@@ -12,7 +12,6 @@ private:
     static const int MAX_CAPACITY = 100;
 
 public:
-    // Sonar требует string_view
     explicit PharmacyWarehouse(std::string_view name);
 
     std::string getName() const;
@@ -28,4 +27,7 @@ public:
     void printStockReport() const;
     void printExpired() const;
     void printAvailable() const;
+
+    PharmacyWarehouse& operator+=(const Medicine& med);
+    PharmacyWarehouse& operator-=(const Medicine& med);
 };
