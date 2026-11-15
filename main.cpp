@@ -134,7 +134,7 @@ void printWarehouseMenu() {
     cout << "  5. Dispose expired medicines\n";
     cout << "  6. Show only expired\n";
     cout << "  7. Show only available for issue\n";
-    cout << "  8. Operator demonstration (Lab 2)\n";
+    cout << "  8. Operator demonstration\n";
     cout << "  0. Back\n";
 }
 
