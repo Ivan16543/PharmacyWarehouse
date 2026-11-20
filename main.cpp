@@ -138,6 +138,7 @@ void printWarehouseMenu() {
     cout << "  0. Back\n";
 }
 
+
 void demonstrateOperators(PharmacyWarehouse& warehouse) {
     cout << "\nOperator Demonstration\n";
     Medicine m1;
@@ -158,9 +159,9 @@ void demonstrateOperators(PharmacyWarehouse& warehouse) {
     if (m1 == m2) cout << "Medicines are IDENTICAL.\n";
     else cout << "Medicines are DIFFERENT.\n";
 
-    cout << "Comparison operator< (by packs): ";
-    if (m1 < m2) cout << "First medicine has FEWER packs.\n"; 
-    else if (m1 > m2) cout << "First medicine has MORE packs.\n"; 
+    cout << "Comparison operator< (by expiry date): ";
+    if (m1 < m2) cout << "First medicine expires earlier.\n"; 
+    else if (m1 > m2) cout << "First medicine expires later.\n"; 
     else cout << "Same number of packs.\n";
 
     cout << "Friend function hasSpecialStorage: ";

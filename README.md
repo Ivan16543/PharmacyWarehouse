@@ -48,7 +48,8 @@
 ### Компиляция через терминал
 
 ```bash
-g++ -std=c++17 -Wall -Wextra main.cpp Medicine.cpp PharmacyWarehouse.cpp -o pharmacy
+g++ -std=c++17 -Iinclude main.cpp src/Medicine.cpp src/PharmacyWarehouse.cpp -o pharmacy.exe
+./pharmacy.exe
 ```
 ### Запуск
 

@@ -111,9 +111,9 @@ bool Medicine::operator==(const Medicine& other) const {
 }
 
 bool Medicine::operator<(const Medicine& other) const { 
-    return packs < other.packs;
+    return dateToKey(expiryDate) < dateToKey(other.expiryDate);
 }
 
 bool Medicine::operator>(const Medicine& other) const { 
-    return packs > other.packs;
+    return dateToKey(expiryDate) > dateToKey(other.expiryDate);
 }

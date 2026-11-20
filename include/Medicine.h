@@ -48,8 +48,8 @@ public:
 
     bool operator==(const Medicine& other) const; 
 
-    bool operator<(const Medicine& other) const; // NOSONAR 
-    bool operator>(const Medicine& other) const; // NOSONAR 
+    bool operator<(const Medicine& other) const; // NOSONAR
+    bool operator>(const Medicine& other) const; // NOSONAR
 
     friend std::ostream& operator<<(std::ostream& os, const Medicine& med) {
         os << "Medicine: " << med.name << " (" << med.category << ")\n"
